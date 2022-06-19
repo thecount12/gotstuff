@@ -114,5 +114,227 @@
         fmt.Println(message)
     }
 
+* now that greetings.Hello("") is empty lets test the error
+* go run .
+
+    greetings: empty name
+    exit status 1
+
+# Go  slices
+
+* greetings/greetings.go change the code as follows:
+
+    package greetings
+    
+    import (
+        "errors"
+        "fmt"
+        "math/rand"
+        "time"
+    )   
+
+    // Hello returns a greeting for the named person.
+    func Hello(name string) (string, error) {
+        // If no name was given, return an error with a message.
+        if name == "" {
+            return name, errors.New("empty name")
+        }
+        // Create a message using a random format.
+        message := fmt.Sprintf(randomFormat(), name)
+        return message, nil
+    }
+
+    // init sets initial values for variables used in the function.
+    func init() {
+        rand.Seed(time.Now().UnixNano())
+    }
+
+    // randomFormat returns one of a set of greeting messages. The returned
+    // message is selected at random.
+    func randomFormat() string {
+        // A slice of message formats.
+        formats := []string{
+            "Hi, %v. Welcome!",
+            "Great to see you, %v!",
+            "Hail, %v! Well met!",
+        }
+
+        // Return a randomly selected message format by specifying
+        // a random index for the slice of formats.
+        return formats[rand.Intn(len(formats))]
+    }
+
+* now change bazinga/bazinga.go and change Glady's name to something else
+
+        message, err := greetings.Hello("Peter")
+
+ * go run .
+
+    Great to see you, Peter!
+
+* go run .
+
+    Hi, Peter. Welcome!
+    ...
+
+## Slice multiple people
+
+* modify greetings/greetings.go
+
+    package greetings
+
+    import (
+        "errors"
+        "fmt"
+        "math/rand"
+        "time"
+    )
+
+    // Hello returns a greeting for the named person.
+    func Hello(name string) (string, error) {
+        // If no name was given, return an error with a message.
+        if name == "" {
+            return name, errors.New("empty name")
+        }
+        // Create a message using a random format.
+        message := fmt.Sprintf(randomFormat(), name)
+        return message, nil
+    }
+
+    // Hellos returns a map that associates each of the named people
+    // with a greeting message.
+    func Hellos(names []string) (map[string]string, error) {
+        // A map to associate names with messages.
+        messages := make(map[string]string)
+        // Loop through the received slice of names, calling
+        // the Hello function to get a message for each name.
+        for _, name := range names {
+            message, err := Hello(name)
+            if err != nil {
+                return nil, err
+            }
+            // In the map, associate the retrieved message with
+            // the name.
+            messages[name] = message
+        }
+        return messages, nil
+    }
+
+    // Init sets initial values for variables used in the function.
+    func init() {
+        rand.Seed(time.Now().UnixNano())
+    }
+
+    // randomFormat returns one of a set of greeting messages. The returned
+    // message is selected at random.
+    func randomFormat() string {
+        // A slice of message formats.
+        formats := []string{
+            "Hi, %v. Welcome!",
+            "Great to see you, %v!",
+            "Hail, %v! Well met!",
+        }
+
+        // Return one of the message formats selected at random.
+        return formats[rand.Intn(len(formats))]
+    }
+
+* modify bazinga/bazinga.go
+
+    package main
+
+    import (
+        "fmt"
+        "log"
+
+        "example.com/greetings"
+    )
+
+    func main() {
+        // Set properties of the predefined Logger, including
+        // the log entry prefix and a flag to disable printing
+        // the time, source file, and line number.
+        log.SetPrefix("greetings: ")
+        log.SetFlags(0)
+
+        // A slice of names.
+        names := []string{"Gladys", "Samantha", "Darrin"}
+
+        // Request greeting messages for the names.
+        messages, err := greetings.Hellos(names)
+        if err != nil {
+            log.Fatal(err)
+        }
+        // If no error was returned, print the returned map of
+        // messages to the console.
+        fmt.Println(messages)
+    }
+
+* go run .
+
+    results: map[Darrin:Great to see you, Darrin! Glady:Great to see you, Glady! Samantha:Great to see you, Samantha!]
+ 
+# Testing
+
+* greetings/greetings_test.go
+
+    package greetings
+
+    import (
+        "testing"
+        "regexp"
+    )
+
+    // TestHelloName calls greetings.Hello with a name, checking
+    // for a valid return value.
+    func TestHelloName(t *testing.T) {
+        name := "Gladys"
+        want := regexp.MustCompile(`\b`+name+`\b`)
+        msg, err := Hello("Gladys")
+        if !want.MatchString(msg) || err != nil {
+            t.Fatalf(`Hello("Gladys") = %q, %v, want match for %#q, nil`, msg, err, want)
+        }
+    }
+
+    // TestHelloEmpty calls greetings.Hello with an empty string,
+    // checking for an error.
+    func TestHelloEmpty(t *testing.T) {
+        msg, err := Hello("")
+        if msg != "" || err == nil {
+            t.Fatalf(`Hello("") = %q, %v, want "", error`, msg, err)
+        }
+    }
+
+* in same directory run test
+* go test
+* go test -v
+
+    === RUN   TestHelloName
+    --- PASS: TestHelloName (0.00s)
+    === RUN   TestHelloEmpty
+    --- PASS: TestHelloEmpty (0.00s)
+    PASS
+    ok  	example.com/greetings	0.007s
+
+* break greetings/greetings.go to verify the error
+
+    // message := fmt.Sprintf(randomFormat(), name)
+    message := fmt.Sprint(randomFormat())
+
+* go test 
+
+    -- FAIL: TestHelloName (0.00s)
+        greetings_test.go:15: Hello("Gladys") = "Hail, %!v(MISSING)! Well met!", <nil>, want match for `\bGladys\b`, nil
+    FAIL
+    exit status 1
+    FAIL	example.com/greetings	0.007s
+
+# Compile
+
+* go build in example.com/greetings
+* useful tool for binary compilation: go list -f '{{.Target}}'
+* export PATH=$PATH:/path/to/your/install/directory
+* alternative for go env -w GOBIN=/usr/bin
+* go install
 
 

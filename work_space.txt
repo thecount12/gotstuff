@@ -1,0 +1,107 @@
+# Building workspaces
+## Create a module for your code
+
+* mkdir workspace
+* cd workspace
+* mkdir hello
+* cd hello
+* go mod init example.com/hello
+* go get golang.org/example
+* vi hello.go
+
+    package main
+    import (
+        "fmt"
+
+        "golang.org/x/example/stringutil"
+    )
+    func main() {
+        fmt.Println(stringutil.Reverse("Hello"))
+    }
+
+* go run example.com/hello
+
+    results:
+    olleH
+
+## Cretae the workspace
+
+* create and intialize the workspace to create go.work
+* go work init ./hello
+
+    cat go.work
+    go 1.16
+
+    use ./hello
+
+## Run the program in the workspace directory
+
+* go run example.com/hello
+
+    results: 
+    olleH
+
+## Download and modify the golang.org/x/example module
+
+* from /workspace clone rep: git clone https://go.googlesource.com/example
+* add module to workspace: go work use ./example
+* cat go.work
+
+    go 1.18
+    use (
+            ./hello
+            ./example
+    )
+
+* the file now inclues both /hello and /example
+* add a new function to example/stringutil/toupper.go
+
+    package stringutil
+
+    import "unicode"
+
+    // ToUpper uppercases all the runes in its argument string.
+    func ToUpper(s string) string {
+        r := []rune(s)
+        for i := range r {
+            r[i] = unicode.ToUpper(r[i])
+        }
+        return string(r)
+    }
+
+* now mnodify /hello/hello.go to use that new function
+
+    package main
+
+    import (
+        "fmt"
+
+        "golang.org/x/example/stringutil"
+    )
+
+    func main() {
+        fmt.Println(stringutil.ToUpper("Hello"))
+    }
+
+* run the code in the workspace
+* go run example.com/hello
+
+    results:
+    HELLO
+
+* go work can be used instead of adding replace directives to work across multiple modules
+
+## Future step
+
+* cd hello
+* go get golang.org/x/example@v0.1.0
+* now go command can properly resolve the modules outside the workspace you can iterate it
+* cat hello/go.mod
+
+    module example.com/hello
+
+    go 1.18
+
+    require golang.org/x/example v0.0.0-20220412213650-2e68773dfca0 // indirect
+ 
+
