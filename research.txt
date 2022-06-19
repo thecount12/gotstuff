@@ -1,0 +1,3 @@
+https://github.com/gophergala/learn-Go-the-hard-way
+https://dev.to/krystofee/i-m-learning-go-the-hard-way-507h
+
