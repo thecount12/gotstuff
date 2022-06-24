@@ -337,4 +337,28 @@
 * alternative for go env -w GOBIN=/usr/bin
 * go install
 
+## godoc 
+
+To install godoc and run server
+
+    mkdir godocstuff
+    cd godocstuff
+    go mod init example/godocstuff
+    go install godoc
+    package godoc is not in GOROOT (/usr/lib/go-1.18/src/godoc)
+    go install golang.org/x/tools/godoc
+    no required module provides package golang.org/x/tools/godoc; to add it:
+            go get golang.org/x/tools/godoc
+    go get golang.org/x/tools/godoc
+    go: downloading golang.org/x/tools v0.1.11
+    go: downloading github.com/yuin/goldmark v1.4.1
+    go: added github.com/yuin/goldmark v1.4.1
+    go: added golang.org/x/tools v0.1.11
+
+
+* export PATH="$GOPATH/bin:$PATH"
+* for some reason I needed the whole path
+* godoc -http=:8080 -goroot /usr/share/go
+
+
 

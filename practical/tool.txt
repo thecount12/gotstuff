@@ -1,0 +1,26 @@
+some basic proto buff tools
+
+    apt-get install protoc-gen-go
+    protoc --version
+    libprotoc 3.12.4
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26
+
+results: go: downloading google.golang.org/protobuf v1.26.0
+
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
+
+I may or may not need this
+
+    export PATH="$PATH:$(go env GOPATH)/bin"
+
+    protoc-gen-go --version
+
+results: protoc-gen-go v1.26.0
+
+    protoc-gen-go-grpc --version
+
+results: protoc-gen-go-grpc 1.1.0
+
+
+
+
