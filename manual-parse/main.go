@@ -1,4 +1,7 @@
 // manual-parse/main.go
+// go mod init github.com/somedir/manual-parse
+// go mod init example/manual-parse
+// go build -c application
 package main
 
 import (
