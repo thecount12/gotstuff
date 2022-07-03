@@ -1,0 +1,22 @@
+# interestin scripts
+
+https://github.com/avelino/awesome-go
+
+## todo app
+
+https://betterprogramming.pub/build-a-simple-todolist-app-in-golang-82297ec25c7d
+
+## golang as a scripting
+
+https://eminetto.medium.com/using-golang-as-a-scripting-language-21d483e3ffa9
+
+## more on scripting
+
+https://gist.github.com/posener/73ffd326d88483df6b1cb66e8ed1e0bd
+
+## interesting on scripting
+
+https://bitfieldconsulting.com/golang/scripting
+
+## https://www.newthinktank.com/2015/02/go-programming-tutorial/
+
