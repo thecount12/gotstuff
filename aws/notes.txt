@@ -1,0 +1,23 @@
+# AWS notes
+
+I will add additional stuff here:
+
+https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/s3-example-basic-bucket-operations.html
+
+
+https://aws.amazon.com/sdk-for-go/
+
+basic dependencies
+
+    mkdir whatever
+    cd whatever
+    go mod init whatever
+
+    go get github.com/aws/aws-sdk-go-v2/aws
+    go get github.com/aws/aws-sdk-go-v2/config
+    go get github.com/aws/aws-sdk-go-v2/service/s3
+    go get github.com/aws/aws-sdk-go-v2/service/dynamodb
+
+    touch main.go
+
+
