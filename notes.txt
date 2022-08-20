@@ -360,5 +360,30 @@ To install godoc and run server
 * for some reason I needed the whole path
 * godoc -http=:8080 -goroot /usr/share/go
 
+## db stuff
+
+https://earthly.dev/blog/golang-sqlite/
+go get github.com/mattn/go-sqlite3
+
+ type Activities struct {
+ mu         sync.Mutex
+- activities []api.Activity
++ db *sql.DB
+}
+
+### db connection open
+
+const file string = "activities.db" 
+db, err := sql.Open("sqlite3", file)
+
+import (
+ "database/sql"
+ "errors"
+ "log"
+ "sync"
+
+ api "github.com/adamgordonbell/cloudservices/activity-log"
++  _ "github.com/mattn/go-sqlite3"
+)
 
 
