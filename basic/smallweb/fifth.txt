@@ -1,0 +1,33 @@
+/*
+move files around into cmd and pkg directories and change
+render to handle base.laout.tmpl
+
+
+
+
+*/
+
+
+
+package render
+
+
+// get bootstrap.com
+import (
+	"fmt"
+	"html/template"
+	"net/http"
+)
+
+// render function
+func RenderTemplate(w http.ResponseWriter, tmpl string) {
+	parsedTemplate, _ := template.ParseFiles("./templates/" + tmpl, "./templates/base.layout.tmpl")
+	err := parsedTemplate.Execute(w, nil)
+	if err != nil {
+		fmt.Println("error parsing template:", err)
+		return 
+	}
+}
+
+
+
