@@ -12,6 +12,9 @@ import (
 	//"html/template"
 	//"errors"
 	"myapp/pkg/handlers"
+	"myapp/pkg/config"
+	"myapp/pkg/render"
+	"log"
 )
 
 const portNumber = ":8080"
@@ -19,6 +22,14 @@ const portNumber = ":8080"
 
 // main just main
 func main() {
+	var app config.AppConfig
+	
+	tc, err := render.CreateTemplateCache()
+	
+	if err != nil {
+		log.Fatal("cannot create template cache")
+	}
+	app.TemplateCache = tc
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)
 	fmt.Println(fmt.Sprintf("Starting app on port %s", portNumber))
